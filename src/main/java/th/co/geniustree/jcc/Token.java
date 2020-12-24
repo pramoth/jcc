@@ -1,14 +1,14 @@
 package th.co.geniustree.jcc;
 
 public class Token {
-  enum ToeknType {PLUS, MINUS, STAR, SLASH, INT_LITERAL}
+  enum TokenType {PLUS, MINUS, STAR, SLASH, INT_LITERAL}
 
-  public ToeknType tokenType;
+  public TokenType tokenType;
   public int intValue;
 
   @Override
   public String toString() {
-    if (tokenType == ToeknType.INT_LITERAL) {
+    if (tokenType == TokenType.INT_LITERAL) {
       return "Token{" +
         "tokenType=" + tokenType +
         ", intValue=" + intValue +

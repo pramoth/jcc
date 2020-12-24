@@ -54,20 +54,20 @@ public class Scanner implements AutoCloseable {
       case -1:
         return -1;
       case '+':
-        token.tokenType = Token.ToeknType.PLUS;
+        token.tokenType = Token.TokenType.PLUS;
         break;
       case '-':
-        token.tokenType = Token.ToeknType.MINUS;
+        token.tokenType = Token.TokenType.MINUS;
         break;
       case '*':
-        token.tokenType = Token.ToeknType.STAR;
+        token.tokenType = Token.TokenType.STAR;
         break;
       case '/':
-        token.tokenType = Token.ToeknType.SLASH;
+        token.tokenType = Token.TokenType.SLASH;
         break;
       default:
         if (Character.isDigit(ch)) {
-          token.tokenType = Token.ToeknType.INT_LITERAL;
+          token.tokenType = Token.TokenType.INT_LITERAL;
           token.intValue = scanint(ch);
         } else {
           throw new RuntimeException("Unrecognised character " + (char) ch + " on line " + currentLine);
