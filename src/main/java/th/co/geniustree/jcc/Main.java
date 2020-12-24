@@ -7,12 +7,8 @@ public class Main {
       return;
     }
     try (Scanner scanner = new Scanner(args[0])) {
-      Token token = new Token();
-      try (scanner) {
-        while (scanner.scanTo(token) > -1) {
-          System.out.println(token);
-        }
-      }
+      AstParser astParser = new AstParser(scanner);
+      AstNode astNode = astParser.parseBinaryExpression();
     }
   }
 }

@@ -1,7 +1,7 @@
 package th.co.geniustree.jcc;
 
 public class Token {
-  enum TokenType {PLUS, MINUS, STAR, SLASH, INT_LITERAL}
+  enum TokenType {PLUS, MINUS, STAR, SLASH, INT_LITERAL,EOF}
 
   public TokenType tokenType;
   public int intValue;

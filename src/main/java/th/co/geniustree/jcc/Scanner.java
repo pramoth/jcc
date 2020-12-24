@@ -23,7 +23,7 @@ public class Scanner implements AutoCloseable {
     reader = new FileReader(sourceCode, StandardCharsets.US_ASCII);
   }
 
-  public int next() {
+  private int nextChar() {
     try {
       if (putBack > -1) {
         int ch = putBack;
@@ -40,19 +40,21 @@ public class Scanner implements AutoCloseable {
     }
   }
 
-  public int skipWhiteSpaceUntilNextToken() {
-    int ch = next();
+  private int skipWhiteSpaceUntilNextToken() {
+    int ch = nextChar();
     while (Character.isWhitespace(ch)) {
-      ch = next();
+      ch = nextChar();
     }
     return ch;
   }
 
-  public int scanTo(Token token) {
+  public Token next() {
+    Token token = new Token();
     int ch = skipWhiteSpaceUntilNextToken();
     switch (ch) {
       case -1:
-        return -1;
+        token.tokenType = Token.TokenType.EOF;
+        break;
       case '+':
         token.tokenType = Token.TokenType.PLUS;
         break;
@@ -73,7 +75,7 @@ public class Scanner implements AutoCloseable {
           throw new RuntimeException("Unrecognised character " + (char) ch + " on line " + currentLine);
         }
     }
-    return ch;
+    return token;
   }
 
   private int scanint(int ch) {
@@ -81,10 +83,14 @@ public class Scanner implements AutoCloseable {
     int value = 0;
     while ((digitIndex = "0123456789".indexOf(ch)) > -1) {
       value = value * 10 + digitIndex;
-      ch = next();
+      ch = nextChar();
     }
     putBack = ch;
     return value;
+  }
+
+  public int getCurrentLine() {
+    return currentLine;
   }
 
   @Override
