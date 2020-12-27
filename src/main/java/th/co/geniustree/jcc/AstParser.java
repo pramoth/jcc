@@ -7,12 +7,14 @@ public class AstParser {
   public AstParser(Scanner scanner) {
     this.scanner = scanner;
   }
-  private void scanNextToken(){
+
+  private void scanNextToken() {
     currentToken = scanner.next();
   }
-  public AstNode parseBinaryExpression(){
+
+  public AstNode parseBinaryExpression() {
     scanNextToken();
-    return binaryExpression();
+    return binaryExpression(0);
   }
 
   private AstNode makeAstNode(AstNode.NodeType nodeType, AstNode left, AstNode right, int intValue) {
@@ -38,9 +40,11 @@ public class AstParser {
         AstNode node = makeLeafNode(AstNode.NodeType.INT_LITERAL, currentToken.intValue);
         scanNextToken();
         return node;
-      default: throw new RuntimeException("syntax error on line "+scanner.getCurrentLine());
+      default:
+        throw new RuntimeException("syntax error on line " + scanner.getCurrentLine());
     }
   }
+
   private AstNode.NodeType arithmeticOperation(Token.TokenType tokenType) {
     switch (tokenType) {
       case PLUS:
@@ -52,20 +56,33 @@ public class AstParser {
       case SLASH:
         return AstNode.NodeType.DIVIDE;
       default:
-        throw new RuntimeException("unknown token in "+tokenType+" on line "+scanner.getCurrentLine());
+        throw new RuntimeException("unknown token in " + tokenType + " on line " + scanner.getCurrentLine());
     }
   }
-  private AstNode binaryExpression() {
+
+  private AstNode binaryExpression(int prevPrecedence) {
     AstNode left;
     AstNode right;
-    AstNode.NodeType nodeType;
     left = makePrimary();
-    if(currentToken.tokenType == Token.TokenType.EOF){
+    Token.TokenType tokenType = currentToken.tokenType;
+    if (tokenType == Token.TokenType.EOF) {
       return left;
     }
-    nodeType = arithmeticOperation(currentToken.tokenType);
-    scanNextToken();
-    right = binaryExpression();
-    return makeAstNode(nodeType,left,right,0);
+    while (getOpPrecedance(tokenType) > prevPrecedence) {
+      scanNextToken();
+      right = binaryExpression(tokenType.precedance);
+      left = makeAstNode(arithmeticOperation(tokenType), left, right, 0);
+      tokenType = currentToken.tokenType;
+      if (tokenType == Token.TokenType.EOF) {
+        return left;
+      }
+    }
+    return left;
+  }
+  private int getOpPrecedance(Token.TokenType tokenType){
+    if(tokenType.precedance == 0){
+      throw new RuntimeException("syntax error on line "+scanner.getCurrentLine()+", token "+tokenType);
+    }
+    return tokenType.precedance;
   }
 }

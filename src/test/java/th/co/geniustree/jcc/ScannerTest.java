@@ -42,7 +42,7 @@ public class ScannerTest {
         System.out.println(interpret);
       }
     });
-    Assertions.assertEquals("unknown token in INT_LITERAL on line 1", exception.getMessage());
+    Assertions.assertEquals("syntax error on line 1, token INT_LITERAL", exception.getMessage());
   }
 
   @Test
